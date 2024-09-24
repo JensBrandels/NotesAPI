@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@middy/core": "^5.5.0",
+    "aws-sdk": "^2.1691.0",
     "dotenv": "^16.4.5",
     "uuid": "^10.0.0"
   }

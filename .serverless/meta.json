@@ -1,18 +1,1364 @@
 {
-  "unknown": {
+  "G:\\SKOLAN\\NotesAPI": {
     "versionSfCore": null,
     "versionFramework": "4.4.0",
     "isWithinCompose": false,
+    "isCompose": false,
     "composeOrgName": null,
+    "composeResolverProviders": {
+      "default-aws-credential-resolver": "<REDACTED>",
+      "self": {
+        "instance": {
+          "credentials": "<REDACTED>",
+          "serviceConfigFile": {
+            "org": "schoolwork",
+            "app": "notesapi",
+            "service": "notesapi",
+            "provider": {
+              "name": "aws",
+              "runtime": "nodejs20.x",
+              "region": "eu-north-1",
+              "iamRoleStatements": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:PutItem",
+                    "dynamodb:UpdateItem",
+                    "dynamodb:GetItem",
+                    "dynamodb:DeleteItem",
+                    "dynamodb:Scan",
+                    "dynamodb:Query"
+                  ],
+                  "Resource": [
+                    "arn:aws:dynamodb:eu-north-1:*:table/NotesTable",
+                    "arn:aws:dynamodb:eu-north-1:*:table/UsersTable"
+                  ]
+                }
+              ],
+              "stage": "dev",
+              "versionFunctions": true,
+              "iam": {
+                "role": {
+                  "statements": [
+                    {
+                      "Effect": "Allow",
+                      "Action": [
+                        "dynamodb:PutItem",
+                        "dynamodb:UpdateItem",
+                        "dynamodb:GetItem",
+                        "dynamodb:DeleteItem",
+                        "dynamodb:Scan",
+                        "dynamodb:Query"
+                      ],
+                      "Resource": [
+                        "arn:aws:dynamodb:eu-north-1:*:table/NotesTable",
+                        "arn:aws:dynamodb:eu-north-1:*:table/UsersTable"
+                      ]
+                    },
+                    {
+                      "Effect": "Allow",
+                      "Action": [
+                        "iot:*"
+                      ],
+                      "Resource": "*"
+                    }
+                  ]
+                }
+              },
+              "compiledCloudFormationTemplate": {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Description": "The AWS CloudFormation template for this Serverless application",
+                "Resources": {
+                  "SignUpUserLogGroup": {
+                    "Type": "AWS::Logs::LogGroup",
+                    "Properties": {
+                      "LogGroupName": "/aws/lambda/notesapi-dev-signUpUser"
+                    }
+                  },
+                  "CreateNoteLogGroup": {
+                    "Type": "AWS::Logs::LogGroup",
+                    "Properties": {
+                      "LogGroupName": "/aws/lambda/notesapi-dev-createNote"
+                    }
+                  },
+                  "IamRoleLambdaExecution": {
+                    "Type": "AWS::IAM::Role",
+                    "Properties": {
+                      "AssumeRolePolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                          {
+                            "Effect": "Allow",
+                            "Principal": {
+                              "Service": [
+                                "lambda.amazonaws.com"
+                              ]
+                            },
+                            "Action": [
+                              "sts:AssumeRole"
+                            ]
+                          }
+                        ]
+                      },
+                      "Policies": [
+                        {
+                          "PolicyName": {
+                            "Fn::Join": [
+                              "-",
+                              [
+                                "notesapi",
+                                "dev",
+                                "lambda"
+                              ]
+                            ]
+                          },
+                          "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                              {
+                                "Effect": "Allow",
+                                "Action": [
+                                  "logs:CreateLogStream",
+                                  "logs:CreateLogGroup",
+                                  "logs:TagResource"
+                                ],
+                                "Resource": [
+                                  {
+                                    "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/notesapi-dev*:*"
+                                  }
+                                ]
+                              },
+                              {
+                                "Effect": "Allow",
+                                "Action": [
+                                  "logs:PutLogEvents"
+                                ],
+                                "Resource": [
+                                  {
+                                    "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/notesapi-dev*:*:*"
+                                  }
+                                ]
+                              },
+                              {
+                                "Effect": "Allow",
+                                "Action": [
+                                  "dynamodb:PutItem",
+                                  "dynamodb:UpdateItem",
+                                  "dynamodb:GetItem",
+                                  "dynamodb:DeleteItem",
+                                  "dynamodb:Scan",
+                                  "dynamodb:Query"
+                                ],
+                                "Resource": [
+                                  "arn:aws:dynamodb:eu-north-1:*:table/NotesTable",
+                                  "arn:aws:dynamodb:eu-north-1:*:table/UsersTable"
+                                ]
+                              },
+                              {
+                                "Effect": "Allow",
+                                "Action": [
+                                  "iot:*"
+                                ],
+                                "Resource": "*"
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "Path": "/",
+                      "RoleName": {
+                        "Fn::Join": [
+                          "-",
+                          [
+                            "notesapi",
+                            "dev",
+                            {
+                              "Ref": "AWS::Region"
+                            },
+                            "lambdaRole"
+                          ]
+                        ]
+                      }
+                    }
+                  },
+                  "SignUpUserLambdaFunction": {
+                    "Type": "AWS::Lambda::Function",
+                    "Properties": {
+                      "Code": {
+                        "S3Bucket": "serverless-framework-deployments-eu-north-1-0aa540c2-533d",
+                        "S3Key": "serverless/notesapi/dev/1727182372797-2024-09-24T12:52:52.797Z/notesapi.zip"
+                      },
+                      "Handler": "index.handler",
+                      "Runtime": "nodejs20.x",
+                      "FunctionName": "notesapi-dev-signUpUser",
+                      "MemorySize": 1024,
+                      "Timeout": 6,
+                      "Environment": {
+                        "Variables": {
+                          "SLS_IOT_ENDPOINT": "a3ctmwwes4ieup-ats.iot.eu-north-1.amazonaws.com",
+                          "SLS_SERVICE": "notesapi",
+                          "SLS_STAGE": "dev",
+                          "SLS_FUNCTION": "signUpUser"
+                        }
+                      },
+                      "Role": {
+                        "Fn::GetAtt": [
+                          "IamRoleLambdaExecution",
+                          "Arn"
+                        ]
+                      }
+                    },
+                    "DependsOn": [
+                      "SignUpUserLogGroup"
+                    ]
+                  },
+                  "CreateNoteLambdaFunction": {
+                    "Type": "AWS::Lambda::Function",
+                    "Properties": {
+                      "Code": {
+                        "S3Bucket": "serverless-framework-deployments-eu-north-1-0aa540c2-533d",
+                        "S3Key": "serverless/notesapi/dev/1727182372797-2024-09-24T12:52:52.797Z/notesapi.zip"
+                      },
+                      "Handler": "index.handler",
+                      "Runtime": "nodejs20.x",
+                      "FunctionName": "notesapi-dev-createNote",
+                      "MemorySize": 1024,
+                      "Timeout": 6,
+                      "Environment": {
+                        "Variables": {
+                          "SLS_IOT_ENDPOINT": "a3ctmwwes4ieup-ats.iot.eu-north-1.amazonaws.com",
+                          "SLS_SERVICE": "notesapi",
+                          "SLS_STAGE": "dev",
+                          "SLS_FUNCTION": "createNote"
+                        }
+                      },
+                      "Role": {
+                        "Fn::GetAtt": [
+                          "IamRoleLambdaExecution",
+                          "Arn"
+                        ]
+                      }
+                    },
+                    "DependsOn": [
+                      "CreateNoteLogGroup"
+                    ]
+                  },
+                  "SignUpUserLambdaVersionR2ewF0u2yR4j4K904W7LtJaPTe09rKQjJqK5dwLuY": {
+                    "Type": "AWS::Lambda::Version",
+                    "DeletionPolicy": "Retain",
+                    "Properties": {
+                      "FunctionName": {
+                        "Ref": "SignUpUserLambdaFunction"
+                      },
+                      "CodeSha256": "XHrh44eCbWkn3r7S9pWyfd/gcFTvH5VwB1CIwWx/ErE="
+                    }
+                  },
+                  "CreateNoteLambdaVersionpt6dujZUkO6Z9jVrCSLpYI7Tuit5MLCO4cEzEjPnyQ": {
+                    "Type": "AWS::Lambda::Version",
+                    "DeletionPolicy": "Retain",
+                    "Properties": {
+                      "FunctionName": {
+                        "Ref": "CreateNoteLambdaFunction"
+                      },
+                      "CodeSha256": "XHrh44eCbWkn3r7S9pWyfd/gcFTvH5VwB1CIwWx/ErE="
+                    }
+                  },
+                  "HttpApi": {
+                    "Type": "AWS::ApiGatewayV2::Api",
+                    "Properties": {
+                      "Name": "dev-notesapi",
+                      "ProtocolType": "HTTP"
+                    }
+                  },
+                  "HttpApiStage": {
+                    "Type": "AWS::ApiGatewayV2::Stage",
+                    "Properties": {
+                      "ApiId": {
+                        "Ref": "HttpApi"
+                      },
+                      "StageName": "$default",
+                      "AutoDeploy": true,
+                      "DefaultRouteSettings": {
+                        "DetailedMetricsEnabled": false
+                      }
+                    }
+                  },
+                  "SignUpUserLambdaPermissionHttpApi": {
+                    "Type": "AWS::Lambda::Permission",
+                    "Properties": {
+                      "FunctionName": {
+                        "Fn::GetAtt": [
+                          "SignUpUserLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "Action": "lambda:InvokeFunction",
+                      "Principal": "apigateway.amazonaws.com",
+                      "SourceArn": {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":execute-api:",
+                            {
+                              "Ref": "AWS::Region"
+                            },
+                            ":",
+                            {
+                              "Ref": "AWS::AccountId"
+                            },
+                            ":",
+                            {
+                              "Ref": "HttpApi"
+                            },
+                            "/*"
+                          ]
+                        ]
+                      }
+                    }
+                  },
+                  "HttpApiIntegrationSignUpUser": {
+                    "Type": "AWS::ApiGatewayV2::Integration",
+                    "Properties": {
+                      "ApiId": {
+                        "Ref": "HttpApi"
+                      },
+                      "IntegrationType": "AWS_PROXY",
+                      "IntegrationUri": {
+                        "Fn::GetAtt": [
+                          "SignUpUserLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "PayloadFormatVersion": "2.0",
+                      "TimeoutInMillis": 30000
+                    }
+                  },
+                  "HttpApiRoutePostApiUserSignup": {
+                    "Type": "AWS::ApiGatewayV2::Route",
+                    "Properties": {
+                      "ApiId": {
+                        "Ref": "HttpApi"
+                      },
+                      "RouteKey": "POST /api/user/signup",
+                      "Target": {
+                        "Fn::Join": [
+                          "/",
+                          [
+                            "integrations",
+                            {
+                              "Ref": "HttpApiIntegrationSignUpUser"
+                            }
+                          ]
+                        ]
+                      }
+                    },
+                    "DependsOn": "HttpApiIntegrationSignUpUser"
+                  },
+                  "CreateNoteLambdaPermissionHttpApi": {
+                    "Type": "AWS::Lambda::Permission",
+                    "Properties": {
+                      "FunctionName": {
+                        "Fn::GetAtt": [
+                          "CreateNoteLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "Action": "lambda:InvokeFunction",
+                      "Principal": "apigateway.amazonaws.com",
+                      "SourceArn": {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":execute-api:",
+                            {
+                              "Ref": "AWS::Region"
+                            },
+                            ":",
+                            {
+                              "Ref": "AWS::AccountId"
+                            },
+                            ":",
+                            {
+                              "Ref": "HttpApi"
+                            },
+                            "/*"
+                          ]
+                        ]
+                      }
+                    }
+                  },
+                  "HttpApiIntegrationCreateNote": {
+                    "Type": "AWS::ApiGatewayV2::Integration",
+                    "Properties": {
+                      "ApiId": {
+                        "Ref": "HttpApi"
+                      },
+                      "IntegrationType": "AWS_PROXY",
+                      "IntegrationUri": {
+                        "Fn::GetAtt": [
+                          "CreateNoteLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "PayloadFormatVersion": "2.0",
+                      "TimeoutInMillis": 30000
+                    }
+                  },
+                  "HttpApiRoutePostApiNotes": {
+                    "Type": "AWS::ApiGatewayV2::Route",
+                    "Properties": {
+                      "ApiId": {
+                        "Ref": "HttpApi"
+                      },
+                      "RouteKey": "POST /api/notes",
+                      "Target": {
+                        "Fn::Join": [
+                          "/",
+                          [
+                            "integrations",
+                            {
+                              "Ref": "HttpApiIntegrationCreateNote"
+                            }
+                          ]
+                        ]
+                      }
+                    },
+                    "DependsOn": "HttpApiIntegrationCreateNote"
+                  },
+                  "NotesTable": {
+                    "Type": "AWS::DynamoDB::Table",
+                    "Properties": {
+                      "TableName": "NotesTable",
+                      "AttributeDefinitions": [
+                        {
+                          "AttributeName": "noteId",
+                          "AttributeType": "S"
+                        }
+                      ],
+                      "KeySchema": [
+                        {
+                          "AttributeName": "noteId",
+                          "KeyType": "HASH"
+                        }
+                      ],
+                      "BillingMode": "PAY_PER_REQUEST"
+                    }
+                  },
+                  "UsersTable": {
+                    "Type": "AWS::DynamoDB::Table",
+                    "Properties": {
+                      "TableName": "UsersTable",
+                      "AttributeDefinitions": [
+                        {
+                          "AttributeName": "userId",
+                          "AttributeType": "S"
+                        }
+                      ],
+                      "KeySchema": [
+                        {
+                          "AttributeName": "userId",
+                          "KeyType": "HASH"
+                        }
+                      ],
+                      "BillingMode": "PAY_PER_REQUEST"
+                    }
+                  }
+                },
+                "Outputs": {
+                  "ServerlessDeploymentBucketName": {
+                    "Value": "serverless-framework-deployments-eu-north-1-0aa540c2-533d",
+                    "Export": {
+                      "Name": "sls-notesapi-dev-ServerlessDeploymentBucketName"
+                    }
+                  },
+                  "SignUpUserLambdaFunctionQualifiedArn": {
+                    "Description": "Current Lambda function version",
+                    "Value": {
+                      "Ref": "SignUpUserLambdaVersionR2ewF0u2yR4j4K904W7LtJaPTe09rKQjJqK5dwLuY"
+                    },
+                    "Export": {
+                      "Name": "sls-notesapi-dev-SignUpUserLambdaFunctionQualifiedArn"
+                    }
+                  },
+                  "CreateNoteLambdaFunctionQualifiedArn": {
+                    "Description": "Current Lambda function version",
+                    "Value": {
+                      "Ref": "CreateNoteLambdaVersionpt6dujZUkO6Z9jVrCSLpYI7Tuit5MLCO4cEzEjPnyQ"
+                    },
+                    "Export": {
+                      "Name": "sls-notesapi-dev-CreateNoteLambdaFunctionQualifiedArn"
+                    }
+                  },
+                  "HttpApiId": {
+                    "Description": "Id of the HTTP API",
+                    "Value": {
+                      "Ref": "HttpApi"
+                    },
+                    "Export": {
+                      "Name": "sls-notesapi-dev-HttpApiId"
+                    }
+                  },
+                  "HttpApiUrl": {
+                    "Description": "URL of the HTTP API",
+                    "Value": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "https://",
+                          {
+                            "Ref": "HttpApi"
+                          },
+                          ".execute-api.",
+                          {
+                            "Ref": "AWS::Region"
+                          },
+                          ".",
+                          {
+                            "Ref": "AWS::URLSuffix"
+                          }
+                        ]
+                      ]
+                    },
+                    "Export": {
+                      "Name": "sls-notesapi-dev-HttpApiUrl"
+                    }
+                  }
+                }
+              },
+              "vpc": {}
+            },
+            "functions": {
+              "signUpUser": {
+                "handler": "index.handler",
+                "events": [
+                  {
+                    "httpApi": {
+                      "path": "/api/user/signup",
+                      "method": "post"
+                    },
+                    "resolvedMethod": "POST",
+                    "resolvedPath": "/api/user/signup"
+                  }
+                ],
+                "name": "notesapi-dev-signUpUser",
+                "originalHandler": "postUsers/postUsers.signup",
+                "runtime": "nodejs20.x",
+                "environment": {
+                  "SLS_IOT_ENDPOINT": "a3ctmwwes4ieup-ats.iot.eu-north-1.amazonaws.com",
+                  "SLS_SERVICE": "notesapi",
+                  "SLS_STAGE": "dev",
+                  "SLS_FUNCTION": "signUpUser"
+                },
+                "package": {
+                  "artifact": "G:\\SKOLAN\\NotesAPI\\.serverless\\notesapi.zip"
+                },
+                "memory": 1024,
+                "timeout": 6,
+                "vpc": {},
+                "versionLogicalId": "SignUpUserLambdaVersionR2ewF0u2yR4j4K904W7LtJaPTe09rKQjJqK5dwLuY"
+              },
+              "createNote": {
+                "handler": "index.handler",
+                "events": [
+                  {
+                    "httpApi": {
+                      "path": "/api/notes",
+                      "method": "post"
+                    },
+                    "resolvedMethod": "POST",
+                    "resolvedPath": "/api/notes"
+                  }
+                ],
+                "name": "notesapi-dev-createNote",
+                "originalHandler": "postNotes/postNotes.createNote",
+                "runtime": "nodejs20.x",
+                "environment": {
+                  "SLS_IOT_ENDPOINT": "a3ctmwwes4ieup-ats.iot.eu-north-1.amazonaws.com",
+                  "SLS_SERVICE": "notesapi",
+                  "SLS_STAGE": "dev",
+                  "SLS_FUNCTION": "createNote"
+                },
+                "package": {
+                  "artifact": "G:\\SKOLAN\\NotesAPI\\.serverless\\notesapi.zip"
+                },
+                "memory": 1024,
+                "timeout": 6,
+                "vpc": {},
+                "versionLogicalId": "CreateNoteLambdaVersionpt6dujZUkO6Z9jVrCSLpYI7Tuit5MLCO4cEzEjPnyQ"
+              }
+            },
+            "resources": {
+              "Resources": {
+                "NotesTable": {
+                  "Type": "AWS::DynamoDB::Table",
+                  "Properties": {
+                    "TableName": "NotesTable",
+                    "AttributeDefinitions": [
+                      {
+                        "AttributeName": "noteId",
+                        "AttributeType": "S"
+                      }
+                    ],
+                    "KeySchema": [
+                      {
+                        "AttributeName": "noteId",
+                        "KeyType": "HASH"
+                      }
+                    ],
+                    "BillingMode": "PAY_PER_REQUEST"
+                  }
+                },
+                "UsersTable": {
+                  "Type": "AWS::DynamoDB::Table",
+                  "Properties": {
+                    "TableName": "UsersTable",
+                    "AttributeDefinitions": [
+                      {
+                        "AttributeName": "userId",
+                        "AttributeType": "S"
+                      }
+                    ],
+                    "KeySchema": [
+                      {
+                        "AttributeName": "userId",
+                        "KeyType": "HASH"
+                      }
+                    ],
+                    "BillingMode": "PAY_PER_REQUEST"
+                  }
+                }
+              },
+              "Outputs": {}
+            }
+          },
+          "configFileDirPath": "G:\\SKOLAN\\NotesAPI",
+          "config": {
+            "type": "self"
+          },
+          "options": {},
+          "stage": "dev",
+          "dashboard": null,
+          "logger": {
+            "namespace": "s:core:resolver:self",
+            "prefix": null,
+            "prefixColor": null
+          },
+          "_credentialsPromise": "<REDACTED>"
+        },
+        "resolvers": {}
+      }
+    },
     "composeServiceName": null,
-    "command": [],
+    "servicePath": "G:\\SKOLAN\\NotesAPI",
+    "serviceConfigFileName": "serverless.yml",
+    "service": {
+      "org": "schoolwork",
+      "app": "notesapi",
+      "service": "notesapi",
+      "provider": {
+        "name": "aws",
+        "runtime": "nodejs20.x",
+        "region": "eu-north-1",
+        "iamRoleStatements": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "dynamodb:PutItem",
+              "dynamodb:UpdateItem",
+              "dynamodb:GetItem",
+              "dynamodb:DeleteItem",
+              "dynamodb:Scan",
+              "dynamodb:Query"
+            ],
+            "Resource": [
+              "arn:aws:dynamodb:eu-north-1:*:table/NotesTable",
+              "arn:aws:dynamodb:eu-north-1:*:table/UsersTable"
+            ]
+          }
+        ],
+        "stage": "dev",
+        "versionFunctions": true,
+        "iam": {
+          "role": {
+            "statements": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "dynamodb:PutItem",
+                  "dynamodb:UpdateItem",
+                  "dynamodb:GetItem",
+                  "dynamodb:DeleteItem",
+                  "dynamodb:Scan",
+                  "dynamodb:Query"
+                ],
+                "Resource": [
+                  "arn:aws:dynamodb:eu-north-1:*:table/NotesTable",
+                  "arn:aws:dynamodb:eu-north-1:*:table/UsersTable"
+                ]
+              },
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "iot:*"
+                ],
+                "Resource": "*"
+              }
+            ]
+          }
+        },
+        "compiledCloudFormationTemplate": {
+          "AWSTemplateFormatVersion": "2010-09-09",
+          "Description": "The AWS CloudFormation template for this Serverless application",
+          "Resources": {
+            "SignUpUserLogGroup": {
+              "Type": "AWS::Logs::LogGroup",
+              "Properties": {
+                "LogGroupName": "/aws/lambda/notesapi-dev-signUpUser"
+              }
+            },
+            "CreateNoteLogGroup": {
+              "Type": "AWS::Logs::LogGroup",
+              "Properties": {
+                "LogGroupName": "/aws/lambda/notesapi-dev-createNote"
+              }
+            },
+            "IamRoleLambdaExecution": {
+              "Type": "AWS::IAM::Role",
+              "Properties": {
+                "AssumeRolePolicyDocument": {
+                  "Version": "2012-10-17",
+                  "Statement": [
+                    {
+                      "Effect": "Allow",
+                      "Principal": {
+                        "Service": [
+                          "lambda.amazonaws.com"
+                        ]
+                      },
+                      "Action": [
+                        "sts:AssumeRole"
+                      ]
+                    }
+                  ]
+                },
+                "Policies": [
+                  {
+                    "PolicyName": {
+                      "Fn::Join": [
+                        "-",
+                        [
+                          "notesapi",
+                          "dev",
+                          "lambda"
+                        ]
+                      ]
+                    },
+                    "PolicyDocument": {
+                      "Version": "2012-10-17",
+                      "Statement": [
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "logs:CreateLogStream",
+                            "logs:CreateLogGroup",
+                            "logs:TagResource"
+                          ],
+                          "Resource": [
+                            {
+                              "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/notesapi-dev*:*"
+                            }
+                          ]
+                        },
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "logs:PutLogEvents"
+                          ],
+                          "Resource": [
+                            {
+                              "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/notesapi-dev*:*:*"
+                            }
+                          ]
+                        },
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "dynamodb:PutItem",
+                            "dynamodb:UpdateItem",
+                            "dynamodb:GetItem",
+                            "dynamodb:DeleteItem",
+                            "dynamodb:Scan",
+                            "dynamodb:Query"
+                          ],
+                          "Resource": [
+                            "arn:aws:dynamodb:eu-north-1:*:table/NotesTable",
+                            "arn:aws:dynamodb:eu-north-1:*:table/UsersTable"
+                          ]
+                        },
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "iot:*"
+                          ],
+                          "Resource": "*"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "Path": "/",
+                "RoleName": {
+                  "Fn::Join": [
+                    "-",
+                    [
+                      "notesapi",
+                      "dev",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      "lambdaRole"
+                    ]
+                  ]
+                }
+              }
+            },
+            "SignUpUserLambdaFunction": {
+              "Type": "AWS::Lambda::Function",
+              "Properties": {
+                "Code": {
+                  "S3Bucket": "serverless-framework-deployments-eu-north-1-0aa540c2-533d",
+                  "S3Key": "serverless/notesapi/dev/1727182372797-2024-09-24T12:52:52.797Z/notesapi.zip"
+                },
+                "Handler": "index.handler",
+                "Runtime": "nodejs20.x",
+                "FunctionName": "notesapi-dev-signUpUser",
+                "MemorySize": 1024,
+                "Timeout": 6,
+                "Environment": {
+                  "Variables": {
+                    "SLS_IOT_ENDPOINT": "a3ctmwwes4ieup-ats.iot.eu-north-1.amazonaws.com",
+                    "SLS_SERVICE": "notesapi",
+                    "SLS_STAGE": "dev",
+                    "SLS_FUNCTION": "signUpUser"
+                  }
+                },
+                "Role": {
+                  "Fn::GetAtt": [
+                    "IamRoleLambdaExecution",
+                    "Arn"
+                  ]
+                }
+              },
+              "DependsOn": [
+                "SignUpUserLogGroup"
+              ]
+            },
+            "CreateNoteLambdaFunction": {
+              "Type": "AWS::Lambda::Function",
+              "Properties": {
+                "Code": {
+                  "S3Bucket": "serverless-framework-deployments-eu-north-1-0aa540c2-533d",
+                  "S3Key": "serverless/notesapi/dev/1727182372797-2024-09-24T12:52:52.797Z/notesapi.zip"
+                },
+                "Handler": "index.handler",
+                "Runtime": "nodejs20.x",
+                "FunctionName": "notesapi-dev-createNote",
+                "MemorySize": 1024,
+                "Timeout": 6,
+                "Environment": {
+                  "Variables": {
+                    "SLS_IOT_ENDPOINT": "a3ctmwwes4ieup-ats.iot.eu-north-1.amazonaws.com",
+                    "SLS_SERVICE": "notesapi",
+                    "SLS_STAGE": "dev",
+                    "SLS_FUNCTION": "createNote"
+                  }
+                },
+                "Role": {
+                  "Fn::GetAtt": [
+                    "IamRoleLambdaExecution",
+                    "Arn"
+                  ]
+                }
+              },
+              "DependsOn": [
+                "CreateNoteLogGroup"
+              ]
+            },
+            "SignUpUserLambdaVersionR2ewF0u2yR4j4K904W7LtJaPTe09rKQjJqK5dwLuY": {
+              "Type": "AWS::Lambda::Version",
+              "DeletionPolicy": "Retain",
+              "Properties": {
+                "FunctionName": {
+                  "Ref": "SignUpUserLambdaFunction"
+                },
+                "CodeSha256": "XHrh44eCbWkn3r7S9pWyfd/gcFTvH5VwB1CIwWx/ErE="
+              }
+            },
+            "CreateNoteLambdaVersionpt6dujZUkO6Z9jVrCSLpYI7Tuit5MLCO4cEzEjPnyQ": {
+              "Type": "AWS::Lambda::Version",
+              "DeletionPolicy": "Retain",
+              "Properties": {
+                "FunctionName": {
+                  "Ref": "CreateNoteLambdaFunction"
+                },
+                "CodeSha256": "XHrh44eCbWkn3r7S9pWyfd/gcFTvH5VwB1CIwWx/ErE="
+              }
+            },
+            "HttpApi": {
+              "Type": "AWS::ApiGatewayV2::Api",
+              "Properties": {
+                "Name": "dev-notesapi",
+                "ProtocolType": "HTTP"
+              }
+            },
+            "HttpApiStage": {
+              "Type": "AWS::ApiGatewayV2::Stage",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "StageName": "$default",
+                "AutoDeploy": true,
+                "DefaultRouteSettings": {
+                  "DetailedMetricsEnabled": false
+                }
+              }
+            },
+            "SignUpUserLambdaPermissionHttpApi": {
+              "Type": "AWS::Lambda::Permission",
+              "Properties": {
+                "FunctionName": {
+                  "Fn::GetAtt": [
+                    "SignUpUserLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":execute-api:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":",
+                      {
+                        "Ref": "HttpApi"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              }
+            },
+            "HttpApiIntegrationSignUpUser": {
+              "Type": "AWS::ApiGatewayV2::Integration",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "IntegrationType": "AWS_PROXY",
+                "IntegrationUri": {
+                  "Fn::GetAtt": [
+                    "SignUpUserLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "PayloadFormatVersion": "2.0",
+                "TimeoutInMillis": 30000
+              }
+            },
+            "HttpApiRoutePostApiUserSignup": {
+              "Type": "AWS::ApiGatewayV2::Route",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "RouteKey": "POST /api/user/signup",
+                "Target": {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      "integrations",
+                      {
+                        "Ref": "HttpApiIntegrationSignUpUser"
+                      }
+                    ]
+                  ]
+                }
+              },
+              "DependsOn": "HttpApiIntegrationSignUpUser"
+            },
+            "CreateNoteLambdaPermissionHttpApi": {
+              "Type": "AWS::Lambda::Permission",
+              "Properties": {
+                "FunctionName": {
+                  "Fn::GetAtt": [
+                    "CreateNoteLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":execute-api:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":",
+                      {
+                        "Ref": "HttpApi"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              }
+            },
+            "HttpApiIntegrationCreateNote": {
+              "Type": "AWS::ApiGatewayV2::Integration",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "IntegrationType": "AWS_PROXY",
+                "IntegrationUri": {
+                  "Fn::GetAtt": [
+                    "CreateNoteLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "PayloadFormatVersion": "2.0",
+                "TimeoutInMillis": 30000
+              }
+            },
+            "HttpApiRoutePostApiNotes": {
+              "Type": "AWS::ApiGatewayV2::Route",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "RouteKey": "POST /api/notes",
+                "Target": {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      "integrations",
+                      {
+                        "Ref": "HttpApiIntegrationCreateNote"
+                      }
+                    ]
+                  ]
+                }
+              },
+              "DependsOn": "HttpApiIntegrationCreateNote"
+            },
+            "NotesTable": {
+              "Type": "AWS::DynamoDB::Table",
+              "Properties": {
+                "TableName": "NotesTable",
+                "AttributeDefinitions": [
+                  {
+                    "AttributeName": "noteId",
+                    "AttributeType": "S"
+                  }
+                ],
+                "KeySchema": [
+                  {
+                    "AttributeName": "noteId",
+                    "KeyType": "HASH"
+                  }
+                ],
+                "BillingMode": "PAY_PER_REQUEST"
+              }
+            },
+            "UsersTable": {
+              "Type": "AWS::DynamoDB::Table",
+              "Properties": {
+                "TableName": "UsersTable",
+                "AttributeDefinitions": [
+                  {
+                    "AttributeName": "userId",
+                    "AttributeType": "S"
+                  }
+                ],
+                "KeySchema": [
+                  {
+                    "AttributeName": "userId",
+                    "KeyType": "HASH"
+                  }
+                ],
+                "BillingMode": "PAY_PER_REQUEST"
+              }
+            }
+          },
+          "Outputs": {
+            "ServerlessDeploymentBucketName": {
+              "Value": "serverless-framework-deployments-eu-north-1-0aa540c2-533d",
+              "Export": {
+                "Name": "sls-notesapi-dev-ServerlessDeploymentBucketName"
+              }
+            },
+            "SignUpUserLambdaFunctionQualifiedArn": {
+              "Description": "Current Lambda function version",
+              "Value": {
+                "Ref": "SignUpUserLambdaVersionR2ewF0u2yR4j4K904W7LtJaPTe09rKQjJqK5dwLuY"
+              },
+              "Export": {
+                "Name": "sls-notesapi-dev-SignUpUserLambdaFunctionQualifiedArn"
+              }
+            },
+            "CreateNoteLambdaFunctionQualifiedArn": {
+              "Description": "Current Lambda function version",
+              "Value": {
+                "Ref": "CreateNoteLambdaVersionpt6dujZUkO6Z9jVrCSLpYI7Tuit5MLCO4cEzEjPnyQ"
+              },
+              "Export": {
+                "Name": "sls-notesapi-dev-CreateNoteLambdaFunctionQualifiedArn"
+              }
+            },
+            "HttpApiId": {
+              "Description": "Id of the HTTP API",
+              "Value": {
+                "Ref": "HttpApi"
+              },
+              "Export": {
+                "Name": "sls-notesapi-dev-HttpApiId"
+              }
+            },
+            "HttpApiUrl": {
+              "Description": "URL of the HTTP API",
+              "Value": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "https://",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    ".execute-api.",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ".",
+                    {
+                      "Ref": "AWS::URLSuffix"
+                    }
+                  ]
+                ]
+              },
+              "Export": {
+                "Name": "sls-notesapi-dev-HttpApiUrl"
+              }
+            }
+          }
+        },
+        "vpc": {}
+      },
+      "functions": {
+        "signUpUser": {
+          "handler": "index.handler",
+          "events": [
+            {
+              "httpApi": {
+                "path": "/api/user/signup",
+                "method": "post"
+              },
+              "resolvedMethod": "POST",
+              "resolvedPath": "/api/user/signup"
+            }
+          ],
+          "name": "notesapi-dev-signUpUser",
+          "originalHandler": "postUsers/postUsers.signup",
+          "runtime": "nodejs20.x",
+          "environment": {
+            "SLS_IOT_ENDPOINT": "a3ctmwwes4ieup-ats.iot.eu-north-1.amazonaws.com",
+            "SLS_SERVICE": "notesapi",
+            "SLS_STAGE": "dev",
+            "SLS_FUNCTION": "signUpUser"
+          },
+          "package": {
+            "artifact": "G:\\SKOLAN\\NotesAPI\\.serverless\\notesapi.zip"
+          },
+          "memory": 1024,
+          "timeout": 6,
+          "vpc": {},
+          "versionLogicalId": "SignUpUserLambdaVersionR2ewF0u2yR4j4K904W7LtJaPTe09rKQjJqK5dwLuY"
+        },
+        "createNote": {
+          "handler": "index.handler",
+          "events": [
+            {
+              "httpApi": {
+                "path": "/api/notes",
+                "method": "post"
+              },
+              "resolvedMethod": "POST",
+              "resolvedPath": "/api/notes"
+            }
+          ],
+          "name": "notesapi-dev-createNote",
+          "originalHandler": "postNotes/postNotes.createNote",
+          "runtime": "nodejs20.x",
+          "environment": {
+            "SLS_IOT_ENDPOINT": "a3ctmwwes4ieup-ats.iot.eu-north-1.amazonaws.com",
+            "SLS_SERVICE": "notesapi",
+            "SLS_STAGE": "dev",
+            "SLS_FUNCTION": "createNote"
+          },
+          "package": {
+            "artifact": "G:\\SKOLAN\\NotesAPI\\.serverless\\notesapi.zip"
+          },
+          "memory": 1024,
+          "timeout": 6,
+          "vpc": {},
+          "versionLogicalId": "CreateNoteLambdaVersionpt6dujZUkO6Z9jVrCSLpYI7Tuit5MLCO4cEzEjPnyQ"
+        }
+      },
+      "resources": {
+        "Resources": {
+          "NotesTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+              "TableName": "NotesTable",
+              "AttributeDefinitions": [
+                {
+                  "AttributeName": "noteId",
+                  "AttributeType": "S"
+                }
+              ],
+              "KeySchema": [
+                {
+                  "AttributeName": "noteId",
+                  "KeyType": "HASH"
+                }
+              ],
+              "BillingMode": "PAY_PER_REQUEST"
+            }
+          },
+          "UsersTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+              "TableName": "UsersTable",
+              "AttributeDefinitions": [
+                {
+                  "AttributeName": "userId",
+                  "AttributeType": "S"
+                }
+              ],
+              "KeySchema": [
+                {
+                  "AttributeName": "userId",
+                  "KeyType": "HASH"
+                }
+              ],
+              "BillingMode": "PAY_PER_REQUEST"
+            }
+          }
+        },
+        "Outputs": {}
+      }
+    },
+    "serviceRawFile": "# \"org\" ensures this Service is used with the correct Serverless Framework Access Key.\norg: schoolwork\n# \"app\" enables Serverless Framework Dashboard features and sharing them with other Services.\napp: notesapi\n# \"service\" is the name of this project. This will also be added to your AWS resource names.\nservice: notesapi\n\nprovider:\n  name: aws\n  runtime: nodejs20.x\n  region: eu-north-1 # Specify the AWS region\n  iamRoleStatements:\n    - Effect: \"Allow\"\n      Action:\n        - \"dynamodb:PutItem\"\n        - \"dynamodb:UpdateItem\"\n        - \"dynamodb:GetItem\"\n        - \"dynamodb:DeleteItem\"\n        - \"dynamodb:Scan\"\n        - \"dynamodb:Query\"\n      Resource:\n        - \"arn:aws:dynamodb:${self:provider.region}:*:table/NotesTable\"\n        - \"arn:aws:dynamodb:${self:provider.region}:*:table/UsersTable\"\n\nfunctions:\n  signUpUser:\n    handler: postUsers/postUsers.signup\n    events:\n      - httpApi:\n          path: /api/user/signup\n          method: post\n\n  createNote:\n    handler: postNotes/postNotes.createNote\n    events:\n      - httpApi:\n          path: /api/notes\n          method: post\n\nresources:\n  Resources:\n    NotesTable:\n      Type: \"AWS::DynamoDB::Table\"\n      Properties:\n        TableName: NotesTable\n        AttributeDefinitions:\n          - AttributeName: noteId\n            AttributeType: S\n        KeySchema:\n          - AttributeName: noteId\n            KeyType: HASH\n        BillingMode: PAY_PER_REQUEST\n    UsersTable:\n      Type: \"AWS::DynamoDB::Table\"\n      Properties:\n        TableName: UsersTable\n        AttributeDefinitions:\n          - AttributeName: userId\n            AttributeType: S\n        KeySchema:\n          - AttributeName: userId\n            KeyType: HASH\n        BillingMode: PAY_PER_REQUEST\n",
+    "command": [
+      "dev"
+    ],
     "options": {},
     "error": null,
+    "params": {},
     "machineId": "fe6368fb4138a5416fd10c91a5e0d3ac",
-    "serviceProviderAwsCfStackId": null,
-    "serviceProviderAwsCfStackCreated": null,
-    "serviceProviderAwsCfStackUpdated": null,
-    "serviceProviderAwsCfStackStatus": null,
-    "serviceProviderAwsCfStackOutputs": null
+    "stage": "dev",
+    "accessKeyV2": "<REDACTED>",
+    "accessKeyV1": "<REDACTED>",
+    "orgId": "74dbe5b1-0f70-48f3-b563-0303300b04aa",
+    "orgName": "schoolwork",
+    "userId": "DyyRFhnFh5qsKp3sYm",
+    "dashboard": {
+      "isEnabledForService": true,
+      "requiredAuthentication": false,
+      "orgFeaturesInUse": {
+        "providers": false,
+        "monitoring": false
+      },
+      "orgObservabilityIntegrations": null,
+      "serviceAppId": "wbbSptzcq06K3sgNTR",
+      "serviceProvider": null,
+      "instanceParameters": null
+    },
+    "userName": "schoolwork",
+    "subscription": null,
+    "userEmail": "brandelsjens@gmail.com",
+    "serviceProviderAwsRegion": "eu-north-1",
+    "serviceProviderAwsCredentials": "<REDACTED>",
+    "serviceProviderAwsAccountId": "340752805696",
+    "projectType": "traditional",
+    "versionSf": "4.4.0",
+    "serviceProviderAwsCfStackName": "notesapi-dev",
+    "integrations": {},
+    "serviceUniqueId": "arn:aws:cloudformation:eu-north-1:340752805696:stack/notesapi-dev/0a686620-7a6e-11ef-8506-0a235af13e0b",
+    "serviceProviderAwsCfStackId": "arn:aws:cloudformation:eu-north-1:340752805696:stack/notesapi-dev/0a686620-7a6e-11ef-8506-0a235af13e0b",
+    "serviceProviderAwsCfStackCreated": "2024-09-24T12:10:51.260Z",
+    "serviceProviderAwsCfStackUpdated": "2024-09-24T12:37:17.756Z",
+    "serviceProviderAwsCfStackStatus": "UPDATE_COMPLETE",
+    "serviceProviderAwsCfStackOutputs": [
+      {
+        "OutputKey": "CreateNoteLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-north-1:340752805696:function:notesapi-dev-createNote:4",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-notesapi-dev-CreateNoteLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "HttpApiId",
+        "OutputValue": "fp0rvhlhrj",
+        "Description": "Id of the HTTP API",
+        "ExportName": "sls-notesapi-dev-HttpApiId"
+      },
+      {
+        "OutputKey": "SignUpUserLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:eu-north-1:340752805696:function:notesapi-dev-signUpUser:4",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-notesapi-dev-SignUpUserLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "ServerlessDeploymentBucketName",
+        "OutputValue": "serverless-framework-deployments-eu-north-1-0aa540c2-533d",
+        "ExportName": "sls-notesapi-dev-ServerlessDeploymentBucketName"
+      },
+      {
+        "OutputKey": "HttpApiUrl",
+        "OutputValue": "https://fp0rvhlhrj.execute-api.eu-north-1.amazonaws.com",
+        "Description": "URL of the HTTP API",
+        "ExportName": "sls-notesapi-dev-HttpApiUrl"
+      }
+    ]
   }
 }
