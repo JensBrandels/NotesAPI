@@ -1,7 +1,7 @@
 {
   "G:\\SKOLAN\\NotesAPI": {
     "versionSfCore": null,
-    "versionFramework": "4.4.0",
+    "versionFramework": "4.4.1",
     "isWithinCompose": false,
     "isCompose": false,
     "composeOrgName": null,
@@ -186,7 +186,7 @@
                     "Properties": {
                       "Code": {
                         "S3Bucket": "serverless-framework-deployments-eu-north-1-0aa540c2-533d",
-                        "S3Key": "serverless/notesapi/dev/1727182372797-2024-09-24T12:52:52.797Z/notesapi.zip"
+                        "S3Key": "serverless/notesapi/dev/1727270809431-2024-09-25T13:26:49.431Z/notesapi.zip"
                       },
                       "Handler": "index.handler",
                       "Runtime": "nodejs20.x",
@@ -217,7 +217,7 @@
                     "Properties": {
                       "Code": {
                         "S3Bucket": "serverless-framework-deployments-eu-north-1-0aa540c2-533d",
-                        "S3Key": "serverless/notesapi/dev/1727182372797-2024-09-24T12:52:52.797Z/notesapi.zip"
+                        "S3Key": "serverless/notesapi/dev/1727270809431-2024-09-25T13:26:49.431Z/notesapi.zip"
                       },
                       "Handler": "index.handler",
                       "Runtime": "nodejs20.x",
@@ -835,7 +835,7 @@
               "Properties": {
                 "Code": {
                   "S3Bucket": "serverless-framework-deployments-eu-north-1-0aa540c2-533d",
-                  "S3Key": "serverless/notesapi/dev/1727182372797-2024-09-24T12:52:52.797Z/notesapi.zip"
+                  "S3Key": "serverless/notesapi/dev/1727270809431-2024-09-25T13:26:49.431Z/notesapi.zip"
                 },
                 "Handler": "index.handler",
                 "Runtime": "nodejs20.x",
@@ -866,7 +866,7 @@
               "Properties": {
                 "Code": {
                   "S3Bucket": "serverless-framework-deployments-eu-north-1-0aa540c2-533d",
-                  "S3Key": "serverless/notesapi/dev/1727182372797-2024-09-24T12:52:52.797Z/notesapi.zip"
+                  "S3Key": "serverless/notesapi/dev/1727270809431-2024-09-25T13:26:49.431Z/notesapi.zip"
                 },
                 "Handler": "index.handler",
                 "Runtime": "nodejs20.x",
@@ -1321,7 +1321,7 @@
     "serviceProviderAwsCredentials": "<REDACTED>",
     "serviceProviderAwsAccountId": "340752805696",
     "projectType": "traditional",
-    "versionSf": "4.4.0",
+    "versionSf": "4.4.1",
     "serviceProviderAwsCfStackName": "notesapi-dev",
     "integrations": {},
     "serviceUniqueId": "arn:aws:cloudformation:eu-north-1:340752805696:stack/notesapi-dev/0a686620-7a6e-11ef-8506-0a235af13e0b",
