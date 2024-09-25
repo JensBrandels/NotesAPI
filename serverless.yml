@@ -23,8 +23,10 @@ provider:
         - "arn:aws:dynamodb:${self:provider.region}:*:table/UsersTable"
 
 functions:
-  signUpUser:
-    handler: postUsers/postUsers.signup
+  signup:
+    handler: functions/signup/index.handler
+    environment:
+      SECRET: a1b1c1
     events:
       - httpApi:
           path: /api/user/signup

@@ -5,12 +5,12 @@ const { sendError, sendResponse } = require("../../responses/index");
 const { db } = require("../../services/db");
 const bcrypt = require("bcrypt");
 
-const hashPassword = async () => {
+const hashPassword = async (password) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   return hashedPassword;
 };
 
-exports.signup = async (event) => {
+exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body);
     const { username, password, email, firstname, lastname } = body;
