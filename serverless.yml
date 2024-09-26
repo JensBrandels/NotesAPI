@@ -8,9 +8,9 @@ service: notesapi
 provider:
   name: aws
   runtime: nodejs20.x
-  region: eu-north-1 # Specify the AWS region
+  region: eu-north-1
   environment:
-    SECRET: a1b1c1
+    SECRET: ${env:SECRET}
   iamRoleStatements:
     - Effect: "Allow"
       Action:
@@ -23,6 +23,7 @@ provider:
       Resource:
         - "arn:aws:dynamodb:${self:provider.region}:*:table/NotesTable"
         - "arn:aws:dynamodb:${self:provider.region}:*:table/UsersTable"
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/UsersTable/index/*"
 
 functions:
   signup:
@@ -38,6 +39,14 @@ functions:
       - httpApi:
           path: /api/user/login
           method: post
+
+  getUser:
+    handler: functions/getUser/index.handler
+    timeout: 30
+    events:
+      - httpApi:
+          path: /api/user
+          method: get
 
 resources:
   Resources:
@@ -59,7 +68,16 @@ resources:
         AttributeDefinitions:
           - AttributeName: userId
             AttributeType: S
+          - AttributeName: username
+            AttributeType: S
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: UsernameIndex
+            KeySchema:
+              - AttributeName: username
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST

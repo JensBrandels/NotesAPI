@@ -1,7 +1,6 @@
-const AWS = require("aws-sdk");
 const { v4: uuidv4 } = require("uuid");
-const docClient = new AWS.DynamoDB.DocumentClient();
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
+const { db } = require("../../services/db");
 
 const hashPassword = async (password) => {
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -10,8 +9,9 @@ const hashPassword = async (password) => {
 
 exports.handler = async (event) => {
   try {
-    const body = JSON.parse(event.body);
-    const { username, password, email, firstname, lastname } = body;
+    const { username, password, email, firstname, lastname } = JSON.parse(
+      event.body
+    );
 
     if (!username || !password || !email || !firstname || !lastname) {
       return {
@@ -24,7 +24,7 @@ exports.handler = async (event) => {
 
     const hashedPassword = await hashPassword(password);
 
-    const userItem = {
+    const newUser = await db.put({
       TableName: "UsersTable",
       Item: {
         userId: uuidv4(),
@@ -34,14 +34,13 @@ exports.handler = async (event) => {
         firstname: firstname,
         lastname: lastname,
       },
-    };
-    await docClient.put(userItem).promise(); //kasta in det i databasen
+    });
 
     return {
       statusCode: 200,
       body: JSON.stringify({
         message: "User created successfully!",
-        user: userItem.Item,
+        user: newUser.Item,
       }),
     };
   } catch (error) {
