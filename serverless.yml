@@ -9,6 +9,8 @@ provider:
   name: aws
   runtime: nodejs20.x
   region: eu-north-1 # Specify the AWS region
+  environment:
+    SECRET: a1b1c1
   iamRoleStatements:
     - Effect: "Allow"
       Action:
@@ -25,18 +27,16 @@ provider:
 functions:
   signup:
     handler: functions/signup/index.handler
-    environment:
-      SECRET: a1b1c1
     events:
       - httpApi:
           path: /api/user/signup
           method: post
 
-  createNote:
-    handler: postNotes/postNotes.createNote
+  login:
+    handler: functions/login/index.handler
     events:
       - httpApi:
-          path: /api/notes
+          path: /api/user/login
           method: post
 
 resources:

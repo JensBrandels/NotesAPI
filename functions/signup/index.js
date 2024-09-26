@@ -1,8 +1,6 @@
 const AWS = require("aws-sdk");
 const { v4: uuidv4 } = require("uuid");
 const docClient = new AWS.DynamoDB.DocumentClient();
-const { sendError, sendResponse } = require("../../responses/index");
-const { db } = require("../../services/db");
 const bcrypt = require("bcrypt");
 
 const hashPassword = async (password) => {
